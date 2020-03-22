@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--  namespace：必dao接口的全限定名称 -->
+<mapper namespace="com.wkcto.dao.StudentDao">
+
+    <resultMap id="studentMap" type="com.wkcto.domain.Student">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="crt_time" property="crtTime"/>
+        <result column="upd_time" property="updTime"/>
+    </resultMap>
+    <insert id="insertStudent">
+        insert into student(id,name,email,age)
+        values(#{id},#{name},#{email},#{age})
+    </insert>
+
+    <insert id="insertStudentModel">
+        insert into student(id,name,email,age)
+        values(#{id},#{name},#{email},#{age})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into student(id,name,email,age) values
+        <foreach collection="list" open="" close="" separator="," item="sm">
+            (#{sm.id},#{sm.name},#{sm.email},#{sm.age})
+        </foreach>
+
+    </insert>
+
+
+    <select id="selectStudents" resultType="com.wkcto.model.ViewStudentModel">
+        select id,name,email,age from student order by id limit #{pageNo},#{pageSize}
+    </select>
+
+    <select id="allList" resultMap="studentMap">
+        select * from student order by id
+    </select>
+
+    <insert id="addBatchData">
+        insert into student(name,email,age,address,sex) values
+        <foreach collection="list" open="" close="" separator="," item="sm">
+            (#{sm.name},#{sm.email},#{sm.age},#{sm.address},#{sm.sex})
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatchData">
+        delete from student where id in
+        <foreach collection="ids.split(',')" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateBatchData">
+        update student
+        set  name=
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case ID" close="end">
+            when #{item.id} then #{item.name}
+        </foreach>,
+        email=
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case ID" close="end">
+            when #{item.id} then #{item.email}
+        </foreach>
+        where id in
+        <foreach collection="list" index="index" item="item"
+                 separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+</mapper>
