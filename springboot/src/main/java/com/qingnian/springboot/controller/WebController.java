@@ -21,5 +21,9 @@ public class WebController {
 
     public static void main(String[] args) {
         System.out.print("master have data");
+        System.out.print("dev_rt private");
+
     }
+
+
 }
