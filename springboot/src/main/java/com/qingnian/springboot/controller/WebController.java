@@ -18,4 +18,8 @@ public class WebController {
     public String getInfo1(){
         return "interceptor........./////";
     }
+
+    public static void main(String[] args) {
+        System.out.print("master have data");
+    }
 }
